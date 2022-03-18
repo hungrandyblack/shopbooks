@@ -25,7 +25,44 @@ class User extends Authenticatable
     public $timestamps  = false;
     public function full_name()
     {
-        return 'Lê Quốc Hưng';
+        return $this->name;
+    }
+    
+    public function generateAndSendEmailResetPassword()
+    {
+        $token = $this->generateResetPassworkToken();
+        if (!isset($token)) return false;
+        $message = [
+            'to' => $this->email,
+            'to_name' => $this->full_name(),
+            'subject' => null
+        ];
+        $timeout = config('auth.passwords.users.expire', 60);
+        // set timeout for link - 60 minutes
+        $link = Url::temporarySignedRoute('password.reset', now()->addMinutes($timeout), ['token' => $token]);
+        $data = [
+            'link_reset' => $link
+        ];
+        return PostMan::sendEmailUsingMaster('email.mail', $message, MailTemplate::RESET_PASSWORD, $data);
+    }
+    public function sendEmailVerificationNotification()
+    {
+        $hash = sha1($this->getEmailForVerification());
+        $message = [
+            'to' => $this->email,
+            'to_name' => $this->full_name(),
+            'subject' => null
+        ];
+        $link = Url::signedRoute('verification.verify', ['id' => $this->getKey(), 'hash' => $hash]);
+        $data = [
+            'link_activate' => $link,
+            'user_name' => $this->full_name(),
+        ];
+        return PostMan::sendEmailUsingMaster('mails.plain', $message, MailTemplate::ACTIVE_ACCOUNT, $data);
+    }
+    public function getEmailForVerification()
+    {
+        return md5($this->email . $this->password);
     }
     private function generateResetPassworkToken()
     {
@@ -42,22 +79,21 @@ class User extends Authenticatable
         if (!isset($ret)) return null;
         return $token;
     }
-
-    public function generateAndSendEmailResetPassword()
+    public function sendHappyBirthDate()
     {
         $token = $this->generateResetPassworkToken();
-        if (!isset($token)) return false;
+        $hash = sha1($this->getEmailForVerification());
         $message = [
             'to' => $this->email,
             'to_name' => $this->full_name(),
             'subject' => null
         ];
         $timeout = config('auth.passwords.users.expire', 60);
-        // set timeout for link - 60 minutes
         $link = Url::temporarySignedRoute('password.reset', now()->addMinutes($timeout), ['token' => $token]);
         $data = [
-            'link_reset' => $link
+            'link_activate' => $link,
+            'user_name' => $this->full_name(),
         ];
-        return PostMan::sendEmailUsingMaster('email.fogot_password', $message, MailTemplate::RESET_PASSWORD, $data);
+        return PostMan::sendEmailUsingMaster('email.happyBirthday', $message, MailTemplate::ACTIVE_ACCOUNT, $data);
     }
 }

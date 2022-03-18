@@ -34,7 +34,7 @@
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
-                <form action="{{route('sendEmail')}}" class="login100-form validate-form" method="post">
+                <form  action="{{route('sendEmail')}}" class="login100-form validate-form" method="post">
                     <div class="col-12">
                         @if (Session::has('success'))
                         <p style="width:300px" class="alert-success">
@@ -42,19 +42,30 @@
                         </p>
                         @endif
                       </div>
-                    @csrf
+                      @csrf
+                      @php
+                          if (!isset($token)) {
+                              $token = \Request::route('token');
+                          }@endphp
+                  
+                      <input type="hidden" name="token" value="{{ $token }}">
                     <span class="login100-form-title p-b-43">
-                        Quên Mật Khẩu
+                        Quên mật khẩu
                     </span>
-                    @if (Session::has('error'))
-                    <p class="alert alert-danger">{{ Session::get('error') }}</p>
-                    @endif
+
                     <div class="wrap-input100 validate-input">
-                        <input class="input100" placeholder="Email" type="text" name="email" value="{{old('')}}">
-                    <div class="container-login100-form-btn mt-4">
+                        <input class="input100" placeholder="Mời bạn nhập gmail" type="email" name="email">
+
+                    </div>
+                    <div class="container-login100-form-btn">
                         <button type="submit" class="login100-form-btn">
                             Gửi
                         </button>
+                    </div>
+                    
+                    <div class="container-login100-form-btn mt-4">
+                        <a class="login100-form-btn" href="{{route('login')}}">Đăng Nhập</a>
+                            
                     </div>
                 </form>
 
@@ -88,3 +99,26 @@
 </body>
 
 </html>
+<form action="{{route('sendEmail')}}" class="login100-form validate-form" method="post">
+    <div class="col-12">
+        @if (Session::has('success'))
+        <p style="width:300px" class="alert-success">
+          {{ Session::get('success') }}
+        </p>
+        @endif
+      </div>
+    @csrf
+    <span class="login100-form-title p-b-43">
+        Quên Mật Khẩu
+    </span>
+    @if (Session::has('error'))
+    <p class="alert alert-danger">{{ Session::get('error') }}</p>
+    @endif
+    <div class="wrap-input100 validate-input">
+        <input class="input100" placeholder="Email" type="text" name="email" value="{{old('')}}">
+    <div class="container-login100-form-btn mt-4">
+        <button type="submit" class="login100-form-btn">
+            Gửi
+        </button>
+    </div>
+</form>

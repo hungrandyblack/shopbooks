@@ -24,6 +24,17 @@ class EmailController extends Controller
     }
     public function form()
     {
+        $ngay_hien_tai = date('Y-m-d');
+        $mang = explode('-', $ngay_hien_tai);
+        $users = User::all();
+        foreach ($users as $user) {
+
+            $ngay_sing = explode('-', ($user->birthday));
+
+            if ($ngay_sing[1] == $mang[1] && $ngay_sing[2] == $mang[2]) {
+                $user->sendHappyBirthDate();
+            }
+        }
         return view('email.fogot_password');
     }
     public function sendEmail(\Illuminate\Http\Request $request)
@@ -52,11 +63,11 @@ class EmailController extends Controller
     public function passwordreset(Request $request)
     {
 
+
         if ($request->expires) {
             $token = $request->token;
-           
-            echo __METHOD__;
-            return view('email.reset_password',compact('token'));
+
+            return view('email.reset_password', compact('token'));
         }
         $input = $request->all();
 
@@ -78,13 +89,14 @@ class EmailController extends Controller
     }
     public function passwordEmail(Request $request)
     {
-      
-        $token =$request->token;
+
+        $token = $request->token;
+        
         $record = PasswordReset::where('token', $token)->first();
         $user = User::where('email', $record->email)->first();
         $user->password = Hash::make($request->password);
         $user->save();
-        Session::flash('success','thay đổi mật khẩu thành công');
+        Session::flash('success', 'thay đổi mật khẩu thành công');
         return redirect()->route('login');
     }
 }

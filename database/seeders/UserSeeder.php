@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,14 +18,16 @@ class UserSeeder extends Seeder
     {
         $user = new User();
         $user->name         = "Nguyễn Ngọc Khánh Vũ";
-        $user->role         = 'Giám đốc';
         $user->email        = 'admin@gmail.com';
-        $user->phone        = '0915234678';
-        $user->gender       = 'Nam';
-        $user->address      = 'Đông Hà - Quảng Trị' ;
+        $user->address      = 'Đông Hà - Quảng Trị';
         $user->birthday     = '1998/08/14';
-        $user->password     = Hash::make("admin123")        ;
-        $user->save();    
+        $user->password     = Hash::make("admin123");
+        $user->save();
+        $user->name         = "Nguyễn Ngọc Khánh Vũ";
+        $user->email        = 'admin@gmail.com';
+        $user->address      = 'Đông Hà - Quảng Trị';
+        $user->birthday     = '1998/03/18';
+        $user->password     = Hash::make("admin123");
+        $user->save();
     }
- 
 }

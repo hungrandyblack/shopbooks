@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // rồi nó đã chạy rồi bây h em sẽ kiểm tra email
+        $schedule->command('send:cron')->everyMinute();
     }
 
     /**

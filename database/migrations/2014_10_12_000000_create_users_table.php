@@ -16,7 +16,6 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->softDeletes();
-            $table->date('birthday');
             $table->string('name',255);
             $table->string('email',255);
             $table->timestamp('email_verified_at')->nullable();

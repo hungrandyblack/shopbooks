@@ -34,7 +34,7 @@ class CartRepositoryImpl extends EloquentRepository  implements CartRepository
                 return $cart;
             }
         }
-      
+
         $cart = new Cart();
         $cart->price = ($data['price'] - ( $data['price'] /100 * $data['discount_price'] )  );
         $cart->quantity = $data['quantity'];
@@ -43,7 +43,7 @@ class CartRepositoryImpl extends EloquentRepository  implements CartRepository
         $cart->save();
         return $cart;
     }
-    // lay du lieu 
+    // lay du lieu
     public function cartCode($id)
     {
         $cartCodes = Cart::where('code', $id)->get();
@@ -62,7 +62,7 @@ class CartRepositoryImpl extends EloquentRepository  implements CartRepository
     // tinh tong
     public function total($id)
     {
-        // raw = sum 
+        // raw = sum
         $total = DB::table('carts')
             ->select(DB::raw("sum(carts.price * carts.quantity) as ToTal"))
             ->where('code', $id)->first();
@@ -71,15 +71,17 @@ class CartRepositoryImpl extends EloquentRepository  implements CartRepository
     // up date gio hang
     public function update($data, $object)
     {
+        
         // lấy value là code
         $value = (empty(session('cart_code'))) ? "" : session('cart_code');
-  
+
         // thực hiên duyêt vòng lặp $data["product_id];
         foreach ($data["product_id"] as $key => $product_id) {
             // eloquent với điều kiện product_id = $product:
             $cart_product = Cart::where('product_id', '=', $product_id)
                 ->where('code', $value)
                 ->first();
+
             $cart_product["quantity"] = $data["quantity"][$key];
             $cart_product->save();
         }
@@ -104,5 +106,5 @@ class CartRepositoryImpl extends EloquentRepository  implements CartRepository
         $cart->delete();
         return $cart;
     }
-  
+
 }

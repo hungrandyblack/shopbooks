@@ -32,17 +32,18 @@
                             <div class="item-caption d-flex w-100">
                                 <div class="item-info ml-3">
                                     <a href="product-item.html" class="ten">{{ $cart->name }}</a>
+                                    <form action="{{route('editcart')}}" method="POST" style="display:flex">
+                                        @csrf
+                                        <input type="hidden" name="product_id[]" id="quantity" value="{{$cart->product_id}}">
                                     <div class="soluong d-flex">
                                         <div class="input-number input-group mb-3">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text btn-spin btn-dec">-</span>
+                                                <span onclick="apart_from('{{$cart->id}}')" class="input-group-text btn-spin btn-dec">-</span>
                                             </div>
-                                            <form action="{{route('editcart')}}" method="POST" style="display:flex">
-                                                @csrf
-                                                <input type="hidden" name="product_id[]" value="{{$cart->product_id}}">
-                                                <input type="text" name="quantity[]" value="{{$cart->quantity}}" class="soluongsp  text-center">
+
+                                                <input id="quantity{{$cart->id}}" type="text" name="quantity[]" value="{{$cart->quantity}}" class="soluongsp  text-center">
                                                 <div class="input-group-append">
-                                                    <span class="input-group-text btn-spin btn-inc">+</span>
+                                                    <span onclick="add('{{$cart->id}}')" class="input-group-text btn-spin btn-inc">+</span>
                                                 </div>
                                         </div>
                                     </div>
@@ -53,7 +54,7 @@
                                             <i class="fas fa-trash-alt"></i>
                                     </a>
                                     <a  class="btn btn-warning mt-2" href="{{route('buyNow',$cart->id)}}" >Mua ngay</a>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -92,5 +93,19 @@
         </div>
     </div>
 </section>
+<script>
+function apart_from(cart_id){
+    $input = document.querySelector("#quantity"+cart_id).value;
+    $input = $input -1 ;
+    console.log(document.querySelector("#quantity"+cart_id));
+    document.querySelector("#quantity"+cart_id).value = $input;
+}
+function add(cart_id){
+    $input = document.querySelector("#quantity"+cart_id).value;
+    $input++;
+    console.log(document.querySelector("#quantity"+cart_id));
 
+    document.querySelector("#quantity"+cart_id).value = $input;
+}
+</script>
 @endsection
